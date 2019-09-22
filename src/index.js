@@ -1,12 +1,31 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import React from "react";
+import ReactDOM from "react-dom";
+import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { Provider } from "react-redux";
 
-ReactDOM.render(<App />, document.getElementById('root'));
+import App from "./App";
+import { Store } from "./Store";
+import Login from "./Pages/Login";
+import GerenciarEquipe from "./Pages/GerenciarEquipe";
+import ListarEquipes from "./Pages/ListarEquipes";
+import Avaliar from "./Pages/Avaliar";
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+import GlobalStyle, { MainContainer } from "./globalStyle";
+
+ReactDOM.render(
+  <Provider store={Store}>
+    <MainContainer>
+      <GlobalStyle />
+      <BrowserRouter>
+        <Switch>
+          <Route path="/" exact component={App} />
+          <Route path="/login" exact component={Login} />
+          <Route path="/listarEquipes" exact component={ListarEquipes} />
+          <Route path="/minhaEquipe" exact component={GerenciarEquipe} />
+          <Route path="/avaliar" exact component={Avaliar} />
+        </Switch>
+      </BrowserRouter>
+    </MainContainer>
+  </Provider>,
+  document.getElementById("root")
+);
