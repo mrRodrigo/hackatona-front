@@ -7,6 +7,8 @@ import { login } from "../../Actions";
 import { Container, LoginFormContainer, LabelInput } from "./styles";
 import { Button, Input } from "../../globalStyle";
 
+import api from "../../Service/api";
+
 class Login extends Component {
   onChange = e => {
     this.setState({ [e.target.name]: e.target.value });
@@ -14,11 +16,17 @@ class Login extends Component {
 
   logIn = async () => {
     const { login, history } = this.props;
-    const { matricula } = this.props;
+    const { matricula } = this.state;
 
-    await login({ isProfessor: false });
+    const response = await api.get(`/aluno/usuarios?matricula=${matricula}`);
 
-    history.push("/");
+    if (response.data.length > 0) {
+      await login(response.data[0]);
+
+      history.push("/");
+    } else {
+      console.log("Matricula não existente");
+    }
   };
 
   render() {

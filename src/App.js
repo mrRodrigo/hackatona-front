@@ -14,10 +14,10 @@ class App extends Component {
       <MainContainer>
         <GlobalStyle />
         {currentUser ? (
-          currentUser.isProfessor ? (
-            <MainProfessor />
-          ) : (
+          currentUser.isAluno ? (
             <MainAluno />
+          ) : (
+            <MainProfessor />
           )
         ) : (
           <Login />

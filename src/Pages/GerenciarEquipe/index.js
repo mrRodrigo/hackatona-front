@@ -1,12 +1,15 @@
 import React, { Component } from "react";
 import Autosuggest from "react-autosuggest";
+import api from "../../Service/api";
+
 import "./theme.css";
 import {
   Title,
   Container,
   Text,
   TeamNameContainer,
-  TeamNameInput
+  TeamNameInput,
+  HeaderContainer
 } from "./styles";
 
 import {
@@ -21,11 +24,7 @@ import {
   Button
 } from "../../globalStyle";
 
-const students = [
-  { id: 0, nome: "harua", curso: "ES" },
-  { id: 1, nome: "harub", curso: "CC" },
-  { id: 2, nome: "haruc", curso: "SI" }
-];
+var students = [];
 
 export default class GerenciarEquipe extends Component {
   constructor(props) {
@@ -43,30 +42,29 @@ export default class GerenciarEquipe extends Component {
     students: [],
     myTeam: {
       participants: [],
-      name: null
+      nome: null
     },
     value: "",
     studentToAdd: {}
   };
 
-  componentDidMount() {
-    const myTeam = {
-      name: "My Team",
-      participants: [
-        { nome: "Joâo Mathias", curso: "ES" },
-        { nome: "Jorge antonio", curso: "ES" },
-        { nome: "Joâo Mathias", curso: "ES" },
-        { nome: "Joâo Mathias", curso: "ES" },
-        { nome: "Joâo Mathias", curso: "ES" }
-      ]
-    };
-    this.setState({ myTeam });
+  async componentDidMount() {
+    const response = await api.get("/aluno/usuarios");
+    students = response.data;
+
+    this.setState({});
   }
 
-  sendTeam() {
-    const team = {};
-    console.log();
-  }
+  sendTeam = async () => {
+    const { participants, nome } = this.state.myTeam;
+    const team = {
+      nome,
+      students: participants
+    };
+
+    const response = await api.post("/time", { team });
+    console.log(team);
+  };
 
   getSuggestions = value => {
     const inputValue = value.trim().toLowerCase();
@@ -107,7 +105,7 @@ export default class GerenciarEquipe extends Component {
 
   saveTeamName() {
     var myTeam = this.state.myTeam;
-    myTeam.name = this.state.tmpTeamName;
+    myTeam.nome = this.state.tmpTeamName;
     this.setState({ myTeam });
     this.disableSaveTeamNameButton();
   }
@@ -162,24 +160,30 @@ export default class GerenciarEquipe extends Component {
 
           <hr style={{ marginBottom: "10px" }} />
 
-          <TeamNameContainer>
-            <TeamNameInput
-              placeholder={myTeam.name || "ADICIONE UM NOME AQUI"}
-              onChange={this.onChangeTeamName}
-              onFocus={this.enableSaveTeamNameButton}
-            />
-            <Button
-              height={"25px"}
-              width={"60px"}
-              onClick={this.saveTeamName}
-              hidden={hiddenSaveTeamNameButton}
-            >
-              SALVAR
+          <HeaderContainer>
+            <TeamNameContainer>
+              <TeamNameInput
+                placeholder={myTeam.name || "ADICIONE UM NOME AQUI"}
+                onChange={this.onChangeTeamName}
+                onFocus={this.enableSaveTeamNameButton}
+              />
+              <Button
+                height={"25px"}
+                width={"60px"}
+                onClick={this.saveTeamName}
+                hidden={hiddenSaveTeamNameButton}
+              >
+                SALVAR
+              </Button>
+            </TeamNameContainer>
+            <Button height={"70px"} width={"200px"} onClick={this.sendTeam}>
+              SALVAR TIME
             </Button>
-          </TeamNameContainer>
+          </HeaderContainer>
 
           <Table>
             <TableHead>INTEGRANTES</TableHead>
+
             <tbody>
               <Tr>
                 <TableHeadData>#</TableHeadData>
@@ -203,6 +207,7 @@ export default class GerenciarEquipe extends Component {
           </Table>
           <Text>{`Você ainda pode adicionar ${reamaningTeamate} participantes neste time.`}</Text>
         </Container>
+
         <Text>ADICIONAR INTEGRANTE</Text>
         <Button
           disabled={!reamaningTeamate > 0}

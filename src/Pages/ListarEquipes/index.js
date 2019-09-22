@@ -4,6 +4,8 @@ import { Title, Container } from "../GerenciarEquipe/styles";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 
+import api from "../../Service/api";
+
 import {
   CardContainer,
   Table,
@@ -18,6 +20,10 @@ class ListarEquipes extends Component {
   state = {
     teams: [{ id: 1, nome: "teste" }]
   };
+
+  componentDidMount() {
+    const teams = api.get("/time");
+  }
   render() {
     const { teams } = this.state;
     const { currentUser, history } = this.props;
@@ -39,7 +45,7 @@ class ListarEquipes extends Component {
                 <Tr key={i}>
                   <TableDataID>{i}</TableDataID>
                   <TableData>{t.nome}</TableData>
-                  {currentUser.isProfessor && (
+                  {!currentUser.isAluno && (
                     <TableData>
                       <Button
                         onClick={() => {

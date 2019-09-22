@@ -8,6 +8,11 @@ export const Container = styled.div`
   height: 100%;
 `;
 
+export const HeaderContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
 export const Title = styled.p`
   color: #fdfdfd;
   font-weight: 100;
