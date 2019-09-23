@@ -11,6 +11,9 @@ class MainProfessor extends Component {
         <Button height={"70px"} onClick={() => history.push("/listarEquipes")}>
           AVALIAR
         </Button>
+        <Button height={"70px"} onClick={() => history.push("/login")}>
+          LOGOUT
+        </Button>
       </Container>
     );
   }

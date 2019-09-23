@@ -21,8 +21,10 @@ class ListarEquipes extends Component {
     teams: [{ id: 1, nome: "teste" }]
   };
 
-  componentDidMount() {
-    const teams = api.get("/time");
+  async componentDidMount() {
+    const teams = await api.get("/time");
+    console.log(teams);
+    this.setState({ teams: teams.data });
   }
   render() {
     const { teams } = this.state;

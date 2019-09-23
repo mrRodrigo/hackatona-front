@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Autosuggest from "react-autosuggest";
+import { connect } from "react-redux";
 import api from "../../Service/api";
 
 import "./theme.css";
@@ -26,7 +27,7 @@ import {
 
 var students = [];
 
-export default class GerenciarEquipe extends Component {
+class GerenciarEquipe extends Component {
   constructor(props) {
     super(props);
     this.saveTeamName = this.saveTeamName.bind(this);
@@ -41,7 +42,7 @@ export default class GerenciarEquipe extends Component {
     hiddenSaveTeamNameButton: true,
     students: [],
     myTeam: {
-      participants: [],
+      alunos: [],
       nome: null
     },
     value: "",
@@ -49,21 +50,39 @@ export default class GerenciarEquipe extends Component {
   };
 
   async componentDidMount() {
+    const { currentUser } = this.props;
+
     const response = await api.get("/aluno/usuarios");
+    const team = await api.post("/time/timeByAlunos", [currentUser.matricula]);
+
     students = response.data;
 
-    this.setState({});
+    if (team.data.length > 0)
+      this.setState({ myTeam: team.data[team.data.length - 1] });
   }
 
   sendTeam = async () => {
-    const { participants, nome } = this.state.myTeam;
+    const { alunos, nome, id } = this.state.myTeam;
+
     const team = {
       nome,
-      students: participants
+      alunos: alunos
     };
+    let url = "";
 
-    const response = await api.post("/time", { team });
-    console.log(team);
+    if (nome) {
+      id != null ? (url = `/time/${id}`) : (url = "/time");
+      api
+        .post(url, team)
+        .then(response => {
+          alert("Alterações foram salvas! ");
+        })
+        .catch(error => {
+          alert("Deve haver alunos de pelo menos dois cursos diferentes! ");
+        });
+    } else {
+      alert("Sua equipe precisa de um nome! ");
+    }
   };
 
   getSuggestions = value => {
@@ -85,7 +104,7 @@ export default class GerenciarEquipe extends Component {
       style={{ backgroundColor: "#fff" }}
       onClick={() => {
         this.setState({
-          studentToAdd: students.filter(s => s.id === student.id)[0]
+          studentToAdd: students.filter(s => s.nome === student.nome)[0]
         });
       }}
     >{`${student.nome} - ${student.curso}`}</div>
@@ -99,7 +118,7 @@ export default class GerenciarEquipe extends Component {
 
   remove(i) {
     let myTeam = this.state.myTeam;
-    myTeam.participants.splice(i, 1);
+    myTeam.alunos.splice(i, 1);
     this.setState({ myTeam });
   }
 
@@ -139,13 +158,13 @@ export default class GerenciarEquipe extends Component {
 
   addStudent() {
     let myTeam = this.state.myTeam;
-    myTeam.participants.push(this.state.studentToAdd);
+    myTeam.alunos.push(this.state.studentToAdd);
     this.setState({ myTeam });
-    console.log(myTeam.participants);
+    console.log(myTeam.alunos);
   }
   render() {
     const { myTeam, hiddenSaveTeamNameButton, students, value } = this.state;
-    const reamaningTeamate = 5 - myTeam.participants.length;
+    const reamaningTeamate = 5 - myTeam.alunos.length;
 
     const inputProps = {
       placeholder: "Entre com o nome de um aluno",
@@ -163,7 +182,7 @@ export default class GerenciarEquipe extends Component {
           <HeaderContainer>
             <TeamNameContainer>
               <TeamNameInput
-                placeholder={myTeam.name || "ADICIONE UM NOME AQUI"}
+                placeholder={myTeam.nome || "ADICIONE UM NOME AQUI"}
                 onChange={this.onChangeTeamName}
                 onFocus={this.enableSaveTeamNameButton}
               />
@@ -186,14 +205,14 @@ export default class GerenciarEquipe extends Component {
 
             <tbody>
               <Tr>
-                <TableHeadData>#</TableHeadData>
+                <TableHeadData>MATRÍCULA</TableHeadData>
                 <TableHeadData>NOME</TableHeadData>
                 <TableHeadData>CURSO</TableHeadData>
                 <TableHeadData></TableHeadData>
               </Tr>
-              {myTeam.participants.map((user, i) => (
+              {myTeam.alunos.map((user, i) => (
                 <Tr key={i}>
-                  <TableDataID>{i}</TableDataID>
+                  <TableDataID>{user.matricula}</TableDataID>
                   <TableData>{user.nome}</TableData>
                   <TableData>{user.curso}</TableData>
                   <TableData>
@@ -228,3 +247,8 @@ export default class GerenciarEquipe extends Component {
     );
   }
 }
+const mapStateToProps = store => ({
+  currentUser: store.userReducer.currentUser
+});
+
+export default connect(mapStateToProps)(GerenciarEquipe);

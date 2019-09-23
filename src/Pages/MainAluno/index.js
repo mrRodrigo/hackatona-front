@@ -15,6 +15,9 @@ class MainAluno extends Component {
         <Button height={"70px"} onClick={() => history.push("/listarEquipes")}>
           VER EQUIPES
         </Button>
+        <Button height={"70px"} onClick={() => history.push("/login")}>
+          LOGOUT
+        </Button>
       </Container>
     );
   }
