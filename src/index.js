@@ -9,6 +9,7 @@ import Login from "./Pages/Login";
 import GerenciarEquipe from "./Pages/GerenciarEquipe";
 import ListarEquipes from "./Pages/ListarEquipes";
 import Avaliar from "./Pages/Avaliar";
+import Nota from "./Pages/Notas";
 
 import GlobalStyle, { MainContainer } from "./globalStyle";
 
@@ -23,6 +24,7 @@ ReactDOM.render(
           <Route path="/listarEquipes" exact component={ListarEquipes} />
           <Route path="/minhaEquipe" exact component={GerenciarEquipe} />
           <Route path="/avaliar" exact component={Avaliar} />
+          <Route path="/notas" exact component={Nota} />
         </Switch>
       </BrowserRouter>
     </MainContainer>

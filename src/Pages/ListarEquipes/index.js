@@ -29,43 +29,63 @@ class ListarEquipes extends Component {
   render() {
     const { teams } = this.state;
     const { currentUser, history } = this.props;
+
     return (
       <CardContainer>
-        <Container>
-          <Title>EQUIPES</Title>
+        {currentUser ? (
+          <Container>
+            <Title>
+              EQUIPES{" "}
+              <Button width={"40px"} onClick={() => history.push("/")}>
+                ←
+              </Button>
+            </Title>
 
-          <hr style={{ marginBottom: "10px" }} />
+            <hr style={{ marginBottom: "10px" }} />
 
-          <Table>
-            <tbody>
-              <Tr>
-                <TableHeadData>#</TableHeadData>
-                <TableHeadData>NOME</TableHeadData>
-                {currentUser.isProfessor && <TableHeadData></TableHeadData>}
-              </Tr>
-              {teams.map((t, i) => (
-                <Tr key={i}>
-                  <TableDataID>{i}</TableDataID>
-                  <TableData>{t.nome}</TableData>
-                  {!currentUser.isAluno && (
+            <Table>
+              <tbody>
+                <Tr>
+                  <TableHeadData>#</TableHeadData>
+                  <TableHeadData>NOME</TableHeadData>
+                  {currentUser.isProfessor && <TableHeadData></TableHeadData>}
+                </Tr>
+                {teams.map((t, i) => (
+                  <Tr key={i}>
+                    <TableDataID>{i}</TableDataID>
+                    <TableData>{t.nome}</TableData>
                     <TableData>
+                      {!currentUser.isAluno && (
+                        <Button
+                          onClick={() => {
+                            history.push({
+                              pathname: `/avaliar`,
+                              data: t
+                            });
+                          }}
+                        >
+                          AVALIAR
+                        </Button>
+                      )}
                       <Button
                         onClick={() => {
                           history.push({
-                            pathname: `/avaliar`,
+                            pathname: `/notas`,
                             data: t
                           });
                         }}
                       >
-                        AVALIAR
+                        VER NOTAS
                       </Button>
                     </TableData>
-                  )}
-                </Tr>
-              ))}
-            </tbody>
-          </Table>
-        </Container>
+                  </Tr>
+                ))}
+              </tbody>
+            </Table>
+          </Container>
+        ) : (
+          history.push("/login")
+        )}
       </CardContainer>
     );
   }

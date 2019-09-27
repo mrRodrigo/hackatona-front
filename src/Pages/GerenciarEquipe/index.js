@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { withRouter } from "react-router-dom";
 import Autosuggest from "react-autosuggest";
 import { connect } from "react-redux";
 import api from "../../Service/api";
@@ -164,6 +165,7 @@ class GerenciarEquipe extends Component {
   }
   render() {
     const { myTeam, hiddenSaveTeamNameButton, students, value } = this.state;
+    const { history } = this.props;
     const reamaningTeamate = 5 - myTeam.alunos.length;
 
     const inputProps = {
@@ -175,7 +177,12 @@ class GerenciarEquipe extends Component {
     return (
       <CardContainer>
         <Container>
-          <Title>MINHA EQUIPE</Title>
+          <Title>
+            MINHA EQUIPE
+            <Button width={"40px"} onClick={() => history.push("/")}>
+              ←
+            </Button>
+          </Title>
 
           <hr style={{ marginBottom: "10px" }} />
 
@@ -251,4 +258,4 @@ const mapStateToProps = store => ({
   currentUser: store.userReducer.currentUser
 });
 
-export default connect(mapStateToProps)(GerenciarEquipe);
+export default withRouter(connect(mapStateToProps)(GerenciarEquipe));

@@ -17,6 +17,8 @@ export const Title = styled.p`
   color: #fdfdfd;
   font-weight: 100;
   font-size: 38px;
+  display: flex;
+  justify-content: space-between;
 `;
 
 export const TeamNameContainer = styled.div`

@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 
-import { Container, LabelInput } from "./styles";
-import { Input, Button } from "../../globalStyle";
+import { Container, LabelInput, Input } from "./styles";
+import { Button } from "../../globalStyle";
+import api from "../../Service/api";
 
 class Avaliar extends Component {
   constructor(props) {
@@ -16,11 +17,14 @@ class Avaliar extends Component {
     this.setState({ [e.target.name]: e.target.value });
   }
 
-  send(data, history) {
-    console.log({
-      notas: this.state,
-      timeId: data.id
-    });
+  async send(data, history) {
+    console.log(this.state);
+    const nota = {
+      ...this.state,
+      team: data.id,
+      teamId: data.id
+    };
+    await api.post(`/time/avaliar/${data.id}`, nota);
     history.push("/");
   }
   render() {
