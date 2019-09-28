@@ -1,6 +1,9 @@
 ## The backend of this project was developed with Java and can be found [here](https://github.com/ramonfernandes/projarq-T1)
 
-[screenshots](https://github.com/mrRodrigo/hackatona-front/edit/master/screenshots/a.md)
+ ### [screenshots](https://github.com/mrRodrigo/hackatona-front/edit/master/screenshots/a.md) :camera:
+
+ ### [presentation](https://docs.google.com/presentation/d/14y8HXRwIL0QKd24qVbS6FDzYeqC8HBMiiRirUQPKBoI/edit?usp=sharing) :page_facing_up:
+
 ## Available Scripts
 
 In the project directory, you can run:
